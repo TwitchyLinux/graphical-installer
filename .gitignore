@@ -1,0 +1,11 @@
+/bin
+/twlinst
+/src/golang.org/*
+/src/github.com/alecthomas/*
+/src/github.com/fatih/*
+/src/github.com/mdempsky/*
+/src/github.com/rogpeppe/*
+/src/github.com/sqs/*
+/src/github.com/tpng/*
+/src/github.com/zmb3/*
+/start.glade~
