@@ -91,8 +91,8 @@ func (s *CopyStep) Run(updateChan chan progressUpdate, installState *installStat
 	}
 	time.Sleep(1 * time.Second)
 
-	progressInfo(updateChan, "Mounting %s -> /tmp/install_mounts/boot\n    Opts: %q\n", installState.InstallDevice.Path+"1", ext4Opts)
-	if err := syscall.Mount(installState.InstallDevice.Path+"1", "/tmp/install_mounts/boot", "ext4", ext4Flags, ext4Opts); err != nil {
+	progressInfo(updateChan, "Mounting %s -> /tmp/install_mounts/boot\n    Opts: %q\n", installState.InstallDevice.pathForPartition(1), ext4Opts)
+	if err := syscall.Mount(installState.InstallDevice.pathForPartition(1), "/tmp/install_mounts/boot", "ext4", ext4Flags, ext4Opts); err != nil {
 		return fmt.Errorf("failed to mount dev filesystem: %v", err)
 	}
 	progressInfo(updateChan, "Mounted boot fs.\n")

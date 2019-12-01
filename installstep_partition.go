@@ -58,8 +58,8 @@ func (s *PartitionStep) Run(updateChan chan progressUpdate, installState *instal
 	}
 	time.Sleep(3 * time.Second)
 
-	cmd = exec.Command("mkfs.ext4", "-qF", installState.InstallDevice.Path+"1")
-	progressInfo(updateChan, "\n  Creating ext4 filesystem on %v\n", installState.InstallDevice.Path+"1")
+	cmd = exec.Command("mkfs.ext4", "-qF", installState.InstallDevice.pathForPartition(1))
+	progressInfo(updateChan, "\n  Creating ext4 filesystem on %v\n", installState.InstallDevice.pathForPartition(1))
 	out, err = cmd.CombinedOutput()
 	progressInfo(updateChan, "  Output: %q\n", string(out))
 	if err != nil {
@@ -67,9 +67,9 @@ func (s *PartitionStep) Run(updateChan chan progressUpdate, installState *instal
 	}
 	time.Sleep(1 * time.Second)
 
-	cmd = exec.Command("cryptsetup", "luksFormat", "--type", "luks2", installState.InstallDevice.Path+"2", "--key-file", "-",
+	cmd = exec.Command("cryptsetup", "luksFormat", "--type", "luks2", installState.InstallDevice.pathForPartition(2), "--key-file", "-",
 		"--hash", "sha256", "--cipher", "aes-xts-plain64", "--key-size", "512", "--iter-time", "2600", "--use-random")
-	progressInfo(updateChan, "\n  Creating encrypted filesystem on %v\n", installState.InstallDevice.Path+"2")
+	progressInfo(updateChan, "\n  Creating encrypted filesystem on %v\n", installState.InstallDevice.pathForPartition(2))
 	progressInfo(updateChan, "  Invocation: %v\n", cmd.Args)
 	cmd.Stdin = bytes.NewReader([]byte(installState.Pw))
 	out, err = cmd.CombinedOutput()
@@ -80,7 +80,7 @@ func (s *PartitionStep) Run(updateChan chan progressUpdate, installState *instal
 	time.Sleep(1 * time.Second)
 
 	progressInfo(updateChan, "\n  Unlocking root filesystem\n")
-	cmd = exec.Command("cryptsetup", "luksOpen", "--key-file", "-", installState.InstallDevice.Path+"2", "cryptroot")
+	cmd = exec.Command("cryptsetup", "luksOpen", "--key-file", "-", installState.InstallDevice.pathForPartition(2), "cryptroot")
 	progressInfo(updateChan, "  Invocation: %v\n", cmd.Args)
 	cmd.Stdin = bytes.NewReader([]byte(installState.Pw))
 	out, err = cmd.CombinedOutput()
@@ -105,8 +105,8 @@ func (s *PartitionStep) Run(updateChan chan progressUpdate, installState *instal
 	}
 	time.Sleep(1 * time.Second)
 
-	cmd = exec.Command("mkfs.ext4", "-qF", installState.InstallDevice.Path+"3")
-	progressInfo(updateChan, "\n  Creating ext4 filesystem on %v\n", installState.InstallDevice.Path+"3")
+	cmd = exec.Command("mkfs.ext4", "-qF", installState.InstallDevice.pathForPartition(3))
+	progressInfo(updateChan, "\n  Creating ext4 filesystem on %v\n", installState.InstallDevice.pathForPartition(3))
 	out, err = cmd.CombinedOutput()
 	progressInfo(updateChan, "  Output: %q\n", string(out))
 	if err != nil {

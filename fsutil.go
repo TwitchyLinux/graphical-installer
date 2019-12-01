@@ -32,6 +32,21 @@ type disk struct {
 	FS, Label   string
 }
 
+func (d *disk) pathForPartition(partNum int) string {
+	if _, err := os.Stat(fmt.Sprintf("%s%d", d.Path, partNum)); err == nil {
+		return fmt.Sprintf("%s%d", d.Path, partNum)
+	}
+	if _, err := os.Stat(fmt.Sprintf("%sp%d", d.Path, partNum)); err == nil {
+		return fmt.Sprintf("%sp%d", d.Path, partNum)
+	}
+
+	// fallback
+	if strings.Contains(d.Path, "/sd") {
+		return d.Path + fmt.Sprint(partNum)
+	}
+	return d.Path + "p" + fmt.Sprint(partNum)
+}
+
 var disks []disk
 
 func getDisk(path string) disk {

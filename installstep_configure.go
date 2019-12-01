@@ -38,12 +38,12 @@ func kernelInfo(updateChan chan progressUpdate) (string, string, error) {
 }
 
 func (s *ConfigureStep) Run(updateChan chan progressUpdate, installState *installState) error {
-	bootUUID, err := getUUID(updateChan, installState.InstallDevice.Path+"1")
+	bootUUID, err := getUUID(updateChan, installState.InstallDevice.pathForPartition(1))
 	if err != nil {
 		return err
 	}
 	progressInfo(updateChan, "Boot UUID: %q\n", bootUUID)
-	encUUID, err := getUUID(updateChan, installState.InstallDevice.Path+"2")
+	encUUID, err := getUUID(updateChan, installState.InstallDevice.pathForPartition(2))
 	if err != nil {
 		return err
 	}
