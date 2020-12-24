@@ -194,6 +194,7 @@ func (mw *mainWindow) doSetupStartInstall() {
 		return
 	}
 	scrub := mw.settings.ScrubCheck.GetActive()
+	autologin := mw.settings.AutologinCheck.GetActive()
 
 	state := installState{
 		InstallDevice: &d,
@@ -201,6 +202,7 @@ func (mw *mainWindow) doSetupStartInstall() {
 		User:          u,
 		Host:          h,
 		Scrub:         scrub,
+		Autologin:     autologin,
 		Tz:            mw.settings.TzCtrl.GetActiveText(),
 	}
 

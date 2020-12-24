@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	winTitle = "TwitchyLinux Installer"
+	winTitle = "Welcome to TwitchyLinux!"
 )
 
 type debugInfoNode struct {
@@ -51,6 +51,8 @@ type mainWindow struct {
 
 		ScrubCheck     *gtk.CheckButton
 		ScrubWarnLabel *gtk.Label
+
+		AutologinCheck *gtk.CheckButton
 
 		PkgChecksBox *gtk.Box
 		Pkgs         []optPkg
@@ -311,6 +313,13 @@ func (mw *mainWindow) makeSettingsPane(b *gtk.Builder) error {
 	}
 	mw.settings.ScrubCheck = obj.(*gtk.CheckButton)
 	mw.settings.ScrubCheck.Connect("toggled", mw.callbackSettingsTyped)
+
+	obj, err = b.GetObject("autologinCheck")
+	if err != nil {
+		return errors.New("couldnt find autologinCheck")
+	}
+	mw.settings.AutologinCheck = obj.(*gtk.CheckButton)
+	mw.settings.AutologinCheck.Connect("toggled", mw.callbackSettingsTyped)
 
 	obj, err = b.GetObject("clearDiskWarning")
 	if err != nil {

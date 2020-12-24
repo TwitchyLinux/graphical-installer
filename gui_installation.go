@@ -35,6 +35,7 @@ type installState struct {
 	Pw, User      string
 	Tz, Host      string
 	Scrub         bool
+	Autologin     bool
 
 	OptionalPkgs []string
 }

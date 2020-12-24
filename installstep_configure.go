@@ -173,6 +173,19 @@ func (s *ConfigureStep) runChrootSteps(updateChan chan progressUpdate, installSt
 		}
 	}
 
+	if installState.Autologin {
+		progressInfo(updateChan, "\n  Switching getty@.service with autologin@.service.\n")
+		if err := runCmdInteractive(updateChan, "  [SETUP-AUTOLOGIN]: ", "chroot", "/tmp/install_mounts/root", "cp", "/usr/share/twlinst/autologin-template", "/lib/systemd/system/autologin@.service"); err != nil {
+			return err
+		}
+		if err := runCmdInteractive(updateChan, "  [SETUP-AUTOLOGIN]: ", "chroot", "/tmp/install_mounts/root", "ln", "-s", "../autologin@.service", "/lib/systemd/system/getty.target.wants/autologin@tty1.service"); err != nil {
+			return err
+		}
+		if err := runCmdInteractive(updateChan, "  [SETUP-AUTOLOGIN]: ", "chroot", "/tmp/install_mounts/root", "sed", "-i", "s/USERNAME/"+installState.User+"/g", "/lib/systemd/system/autologin@.service"); err != nil {
+			return err
+		}
+	}
+
 	for _, pkg := range installState.OptionalPkgs {
 		progressInfo(updateChan, "\n")
 		if err := runCmdInteractive(updateChan, "  [INSTALL]: ", "chroot", "/tmp/install_mounts/root", "bash", "-c", "dpkg -i /deb-pkgs/"+pkg+"/*.deb"); err != nil {
